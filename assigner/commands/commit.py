@@ -108,7 +108,7 @@ def setup_parser(parser):
                         help="Commit message")
     parser.add_argument("path", default=".", nargs="?",
                         help="Path of student repositories to commit to")
-    parser.add_argument("--branch", nargs="?", default="master",
+    parser.add_argument("--branch", nargs="?", required=True,
                         help="Local branch to commit to")
     parser.add_argument("-a", "--add", nargs="+", dest="add", default=[],
                         help="Files to add before committing")

@@ -132,7 +132,7 @@ def setup_parser(parser):
                         help="Name of the assignment to clone or fetch.")
     parser.add_argument("path", default=".", nargs="?",
                         help="Path to clone student repositories to")
-    parser.add_argument("--branch", "--branches", nargs="+", default=["master"],
+    parser.add_argument("--branch", "--branches", nargs="+", required=True,
                         help="Local branch or branches to pull when fetching")
     parser.add_argument("-f", "--force", action="store_true", dest="force",
                         help="Discard local changes to student repositories when fetching")

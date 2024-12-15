@@ -62,7 +62,7 @@ def setup_parser(parser):
                         help="Name of the assignment to push.")
     parser.add_argument("path", default=".", nargs="?",
                         help="Path to push student repositories from")
-    parser.add_argument("--branch", "--branches", nargs="+", default=["master"],
+    parser.add_argument("--branch", "--branches", nargs="+", required=True,
                         help="Local branch or branches to push")
     parser.add_argument("-f", "--force", action="store_true", dest="force",
                         help="Force-push student repositories")

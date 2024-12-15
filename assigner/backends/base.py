@@ -111,11 +111,11 @@ class RepoBase:
     def delete_member(self, user_id: str) -> str:
         raise NotImplementedError
 
-    def list_commits(self, ref_name: str = "master", since: str = "") -> str:
+    def list_commits(self, ref_name: str, since: str = "") -> str:
         raise NotImplementedError
 
     def list_commit_hashes(
-        self, ref_name: str = "master", since: str = ""
+        self, ref_name: str, since: str = ""
     ) -> List[str]:
         raise NotImplementedError
 
@@ -134,7 +134,7 @@ class RepoBase:
     def list_pushes(self) -> str:
         raise NotImplementedError
 
-    def get_last_HEAD_commit(self, ref: str = "master") -> str:
+    def get_last_HEAD_commit(self, ref: str) -> str:
         raise NotImplementedError
 
     def list_branches(self) -> str:
@@ -151,13 +151,13 @@ class RepoBase:
 
     def protect(
         self,
-        branch: str = "master",
+        branch: str,
         developer_push: bool = True,
         developer_merge: bool = True,
     ) -> str:
         raise NotImplementedError
 
-    def unprotect(self, branch: str = "master") -> str:
+    def unprotect(self, branch: str) -> str:
         raise NotImplementedError
 
     def unlock(self, student_id: str) -> None:
@@ -181,7 +181,7 @@ class StudentRepoBase(RepoBase):
     def build_name(cls, semester: str, section: str, assignment: str, user: str) -> str:
         raise NotImplementedError
 
-    def push(self, base_repo, branch: str = "master") -> None:
+    def push(self, base_repo, branch: str) -> None:
         """Push base_repo code to this repo"""
         raise NotImplementedError
 
@@ -196,7 +196,7 @@ class TemplateRepoBase(RepoBase):
     def new(cls, name: str, namespace: str, config) -> T:
         raise NotImplementedError
 
-    def push_to(self, student_repo: StudentRepoBase, branch: str = "master") -> None:
+    def push_to(self, student_repo: StudentRepoBase, branch: str) -> None:
         raise NotImplementedError
 
 

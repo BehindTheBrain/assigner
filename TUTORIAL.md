@@ -2,8 +2,16 @@
 
 This document will walk you through the workflow for setting up a class with Assigner and creating, assigning, and fetching student homework.
 
-We'll assume you have installed Assigner using `pip install assigner` or `pip3 install assigner`.
-(If you don't have adminstrator access on your machine, you can run `pip install --user assigner` and put `~/.local/bin` in your `$PATH` instead.)
+To install this fork of Assigner, assuming:
+you have `~/.local/bin` in your `$PATH`, 
+you have cloned this repository, and 
+are in this directory, execute:
+
+`pip install . --user`
+
+Or, if you would like to edit assigner while using it:
+
+`pip install --editable . --user`
 
 ## Setting up a new class
 
@@ -27,15 +35,18 @@ It will prompt you for the following information:
 2. GitLab access token.
     You must create one of these in your GitLab user profile; Assigner will generate a URL that should link you to the page to do that.
     Assigner uses this token to authenticate with GitLab so you don't have to enter your password constantly.
+
 3. The year and semester ('FS' for fall semester, 'SP' for spring semester, or 'SS' for summer semester).
     Assigner will do its best to guess what semester and year it is for you.
     This information is used to name student repositories so that students can easily sort and organize their various assignments.
+
 4. GitLab group to create assignments under.
     We recommend making a group on GitLab for each course; the default value shows the naming scheme we recommend.
     Right now, Assigner does not create this group for you, so you will need to do that yourself.
     **Do not** add students to this group; if you do, they will be able to see all student submissions!
     If you like, you may add graders and TAs to the group.
     Note that you'll need to be an Owner of the group in order to use all of Assigner's features.
+
 5. Canvas information. This is optional; you should enter this information if you want to import your class roster from Canvas.
     We recommend this, as it is the most straightforward way to import a class roster.
     If you enter `y` here, Assigner will prompt you for:
@@ -59,7 +70,7 @@ Do not worry too much about this; Assigner will attempt to fetch the GitLab acco
 You should instruct your students to log in to GitLab at least once so that you can grant them access to their homework repositories.
 Once a student logs in at least once, Assigner will automatically fill in their account information.
 
-#### Importing from Canvas (`assigner canvas list` / `assigner canvas import`)
+#### 1. Importing from Canvas (`assigner canvas list` / `assigner canvas import`)
 
 The simplest way to add students to your Assigner course roster is to import them from Canvas.
 
@@ -69,7 +80,7 @@ The simplest way to add students to your Assigner course roster is to import the
 2. Run `assigner canvas import <course ID> <section letter>`. Use the course ID from the previous step.
     You can import several sections into the same roster by specifying different section letters.
 
-#### Importing from PeopleSoft (`assigner import`)
+#### 2. Importing from PeopleSoft (`assigner import`)
 
 If your institution uses PeopleSoft to manage students and class rosters, you can import those rosters into Assigner as well.
 This process is a little hacky, so if you run into trouble, please [report a bug](https://github.com/redkyn/assigner/issues)!
@@ -85,7 +96,7 @@ This process is a little hacky, so if you run into trouble, please [report a bug
 4. Run `assigner import <path to file generated in step #3> <section letter>`.
     You can import several sections into the same roster by specifying different section letters.
 
-#### Entering student information manually
+#### 2. Entering student information manually
 
 You can manage your roster manually with the `assigner roster` command and its subcommands.
 
@@ -103,6 +114,9 @@ Once you have set Assigner up for your class, you can use it to make and assign 
 
 Each assignment has a **template repository** that you add assignment materials to.
 The template repository is then copied to **student repositories**, one per student.
+Each template repository may have one or multiple branches.
+Assigner sub-commands that apply to the entire repository do not require `--branch <branch_name>` flag,
+while any sub-commands that apply to branches, must include the required `--branch <branch_name>` flag.
 
 This section will walk you through making a new assignment named 'hw1' and performing various actions on it.
 
@@ -118,16 +132,17 @@ Commit your changes and push them to GitLab.
 
 ### Creating student repositories
 
-Once you have created a template repo, you can make student repos from it by running `assigner assign hw1`.
+Once you have created a template repo, you can make student repos from it by running `assigner assign hw1 --branch main`.
 This step *only* creates the repositories; it does not add the students to them.
 You should open GitLab and verify that the students' repo contents look correct.
 Each repository should be named something along the lines of `2017-FS-A-hw1-bob123`.
 
-By default, `assigner assign` copies only the `master` branch from the template repo.
-Typically, this is what you want.
-If you wish to upload different branches, you can pass the `--branch` flag and list the branches you want to push.
-For example, let's say that in addition to the `master` branch, you want to provide your students with a copy of the `devel` branch from the template repo.
-To do so, you'd run `assigner assign hw1 --branch master devel`.
+Different server-side Git hosts default to different branch names (master, main, etc.).
+Explicit being better than implicit, the `--branch` is now a required argument.
+`assigner assign` copies only the `--branch` branch from the template repo.
+Typically, you might run `assigner assign hw1 --branch main devel`.
+If for example, in addition to the `main` branch, you want to provide your students with a copy of the `devel` branch from the template repo.
+To do so, you'd run `assigner assign hw1 --branch main devel`.
 
 ### Opening the assignment to students
 
@@ -142,19 +157,19 @@ Once they have, you can re-run `assigner open hw1` to grant them access to their
 ### Checking up on student progress
 
 You may want to check from time to time to see if students have made progress on their assignment.
-To do this, run `assigner status hw1`.
+To do this, run `assigner status hw1 --branch main`.
 It will print a table of each student in the roster along with the author, time, and hash of the latest commit made to their student repo.
 
 ### Fetching student submissions
 
-Once the submission deadline for an assignment has passed, you can clone each student repo using `assigner get hw1`.
+Once the submission deadline for an assignment has passed, you can clone each student repo using `assigner get hw1 --branch main`.
 Assigner will create a directory named 'hw1' in the current directory, then clone each student repo into a subdirectory of that directory.
 You can then inspect and grade the assignments however you like.
 
-If you want to collect late submissions, you can re-run `assigner get hw1`.
+If you want to collect late submissions, you can re-run `assigner get hw1 --branch main`.
 It will fetch changes for each existing repository and clone any nonexisting repositores.
 
-If you encounter 'Connection reset by peer' errors when cloning, run, say, `assigner get hw1 --attempts=10` to have Assigner try cloning 10 times before giving up.
+If you encounter 'Connection reset by peer' errors when cloning, run, say, `assigner get hw1 --attempts=10 --branch main` to have Assigner try cloning 10 times before giving up.
 
 (Assigner doesn't have plans for any grading features;
 however, if you are interested in automated grading, check out its sister project, [grader](https://github.com/redkyn/grader).)
@@ -163,7 +178,7 @@ however, if you are interested in automated grading, check out its sister projec
 
 Although Assigner does not support grading, it can be used to upload the scores generated by an automated grader to Canvas.
 Currently, this feature is supported for workflows in which an automated grading script runs as part of a Continuous Integration (CI) job and 
-produces an output file (artifact) containing the score.  Only GitLab CI is supported at this time.  
+produces an output file (artifact) containing the score.  Only GitLab CI is supported at this time.
 
 You can view an example autograder utilizing this workflow here: [grade-sh](https://gitlab.com/classroomcode/grade-sh).
 
@@ -189,15 +204,15 @@ It is recommended that the `expire_in` value be set to at least twice as long as
 the scores will be deleted when the artifact expires.
 
 There are two methods of uploading these scores from CI artifacts:
-1. Use `assigner score all` if you'd like to get the scores for all students, passing the `--upload` flag if you'd like to upload them to Canvas.
-1. Use `assigner score interactive` if you'd like to upload scores one at a time, using an interactive search function to select a student.  
+1. Use `assigner score all --branch main` if you'd like to get the scores for all students, passing the `--upload` flag if you'd like to upload them to Canvas.
+1. Use `assigner score interactive --branch main` if you'd like to upload scores one at a time, using an interactive search function to select a student.
 
 The latter option may be useful in circumstances where an instructor wants to verify attendance as part of a programming lab or test.
 
 An example grading workflow for a conventional assignment might look like the following:
-1. `assigner score all assignment-name` while the assignment is open, to monitor student progress.
+1. `assigner score all assignment-name --branch main` while the assignment is open, to monitor student progress.
 1. `assigner lock assignment-name` once the due date is reached
-1. `assigner score all --upload assignment-name -f path/to/grader_file1 path/to/grader_file2` to upload scores and check whether 
+1. `assigner score all --upload assignment-name --branch main --files path/to/grader_file1 path/to/grader_file2` to upload scores and check whether 
 grading-related files were modified by the student, e.g. CI configuration files like `gitlab-ci.yml` or 
 grading inputs like `sample_inputs/input0.txt`.  These paths should be relative to the root of the repository.
 
@@ -208,7 +223,7 @@ grading-related files are changed after an assignment is released.
 
 To use GPG to sign a commit, you must complete the following:
 1. Generate a GPG key if you don't have one.
-1. Associate your GPG key with `git` using the `user.signingkey` config option.
+1. Associate your GPG key with `git` using the `user.signingkey` config option in Git itself (`~/.gitconfig`).
 1. Associate your GPG key with the appropriate repository manager (GitHub, GitLab, etc).
 1. Sign all commits made after the assignment has been opened by passing the `-S` flag to `git commit`.
 
@@ -231,11 +246,11 @@ We recommend using the following workflow with `commit` and `push`:
 2. Clone or pull local copies of their repositories using `assigner get`.
 3. Make the changes you require in each repository.
 4. Commit your changes.
-    `assigner commit assignment-name "my commit message"` behaves effectively like executing `git checkout master; git commit -m "my commit message` in each student repository.
+    `assigner commit assignment-name "my commit message" --branch main` behaves effectively like executing `git checkout main; git commit -m "my commit message` in each student repository.
     Add new files by specifying their names after the `-a` flag; remove files by specifying their names after the `-r` flag.
     To include all tracked changes in each repository, use the `-u` or `--update` flag. This flag has the same behavior as `git add -u` or `git commit -a`.
 
-    To add all untracked files in each student's repository, run `assigner commit assignment-name "commit message" -a "*"`.
+    To add all untracked files in each student's repository, run `assigner commit assignment-name "commit message" -a "*" --branch main`.
 
     As a more extended example, the command 
     ```
@@ -248,7 +263,7 @@ We recommend using the following workflow with `commit` and `push`:
     git rm junk.dat
     git commit --all --message="my commit message"
     ```
-5. Push your commits with `assigner push`.
+5. Push your commits with `assigner push --branch main`.
     If you did not lock the students' repositories, Assigner will print an error and exit.
     We recommend locking their repositories, then updating your local copies with `assigner get` before pushing.
     However, if you are absolutely sure of what you are doing, you can override this check with the `--push-unlocked` flag.
@@ -261,5 +276,5 @@ To re-grant them developer access, run `assigner unlock hw1`.
 
 By default, the branches of each student repo created by Assigner are protected; students cannot force-push to it.
 Typically this is what you want; however, should you want to change that, you may unprotect (or re-protect) branches using `assigner protect`.
-For example, to unprotect the `master` branch, run `assigner unprotect hw1`.
+For example, to unprotect the `main` branch, run `assigner unprotect hw1 --branch main`.
 If you want to protect a branch named `devel`, run `assigner protect hw1 --branch devel`.

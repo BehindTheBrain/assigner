@@ -179,7 +179,7 @@ def verify_commit(auth_emails: List[str], repo: RepoBase, commit_hash: str) -> b
 
 
 def check_repo_integrity(
-    repo: RepoBase, files_to_check: Set[str], since: str = ""
+    repo: RepoBase, branch, files_to_check: Set[str], since: str = ""
 ) -> None:
     """
     Checks whether any "protected" files in a repository have been modified
@@ -189,7 +189,7 @@ def check_repo_integrity(
     :param since: the date after which to check, i.e., commits prior to this date are ignored
     """
     auth_emails = repo.list_authorized_emails()
-    commits = repo.list_commit_hashes("master", since)
+    commits = repo.list_commit_hashes(branch, since)
     for commit in commits:
         modified_files = files_to_check.intersection(repo.list_commit_files(commit))
         if modified_files and not verify_commit(auth_emails, repo, commit):
@@ -277,7 +277,7 @@ def handle_scoring(
             student["id"] = backend.repo.get_user_id(username, backend_conf)
         if not args.noverify:
             unlock_time = repo.get_member_add_date(student["id"])
-            check_repo_integrity(repo, files_to_check, unlock_time)
+            check_repo_integrity(repo, args.branch, files_to_check, unlock_time)
         score = get_most_recent_score(repo, args.path)
         if upload:
             canvas = OptionalCanvas.get_api(conf)
@@ -389,6 +389,8 @@ def setup_parser(parser: argparse.ArgumentParser):
         help="Get scores (using CI artifacts) for all students for a given assignment",
     )
 
+    all_parser.add_argument("--branch", "--branches", nargs="+", required=True,
+                        help="Branch or branches to push")
     all_parser.add_argument("--student", nargs=1, help="ID of student to score")
     all_parser.add_argument(
         "--upload", action="store_true", help="Upload grades to Canvas"
@@ -418,7 +420,7 @@ def setup_parser(parser: argparse.ArgumentParser):
             "--files",
             nargs="+",
             dest="files",
-            default=[".gitlab-ci.yml"],
+            default=[".admin_files/grader_hashes.txt", ".admin_files/hash_gen.sh"],
             help="Files to check for modification",
         )
 

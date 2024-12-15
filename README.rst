@@ -22,17 +22,30 @@ The list of students is retrieved from either a default YAML file or a specified
 Installation
 ------------
 
-Assigner can be installed with ``pip``: ``pip install assigner``.
+This fork of Assigner can be installed by executing this in the current directory:
+``pip3 install .`` 
 
-(You may need to run ``pip3 install assigner`` if your operating system uses python 2 as the default python.)
+If you'd like to edit assigner while using it:
+``pip3 install --editable .`` 
 
 Commands
 --------
 
 Check out the `tutorial <https://github.com/redkyn/assigner/blob/master/TUTORIAL.md>`_ for a walkthrough of how to use Assigner's features!
 
-- ``init`` Creates a new configuration file, interactively prompting for required values.
 - ``help`` What it says on the tin.
+- ``init`` Creates a new configuration file, interactively prompting for required values.
+- ``roster`` Manages the course roster.
+- ``canvas`` Lists Canvas courses or imports students from a Canvas course to the roster.
+- ``import <file> <section>`` Imports students from a CSV file to the roster.
+- ``set <key> <value>`` Sets ``<key>`` to ``<value>`` in the config.
+- ``lock <assignment>`` Sets each student to Reporter status on their homework repository so they cannot push changes, etc.
+- ``unlock <assignment>`` Sets each student to Developer status on their homework repository.
+- ``archive <assignment>`` Archives student repositories, disallowing pushes and hiding the repository from the project listing on GitLab.
+- ``unarchive <assignment>`` Restores archived student repositories to their previous state.
+
+The following commands require the `--brach <branch_name>` flag:
+
 - ``new <assignment>`` Creates a new base repository for an assignment so that you can add the instructions, sample code, etc.
 - ``assign <assignment>`` Creates homework repositories for an assignment for each student in the roster.
 - ``open <assignment>`` Adds each student in the roster to their respective homework repositories as Developers so they can pull/commit/push their work.
@@ -40,19 +53,11 @@ Check out the `tutorial <https://github.com/redkyn/assigner/blob/master/TUTORIAL
 - ``commit <assignment> <message> [<path>]`` Commits changes to files in student repositories located in the CWD or ``<path>``.
 - ``push <assignment> [<path>]`` Pushes new commits to student repositories to GitLab.
 - ``score`` Score student assignments and push grades to Canvas.
-- ``lock <assignment>`` Sets each student to Reporter status on their homework repository so they cannot push changes, etc.
-- ``unlock <assignment>`` Sets each student to Developer status on their homework repository.
-- ``archive <assignment>`` Archives student repositories, disallowing pushes and hiding the repository from the project listing on GitLab.
-- ``unarchive <assignment>`` Restores archived student repositories to their previous state.
 - ``protect <branch>`` Protect a repo branch (prevent force pushes).
 - ``unprotect <branch>`` Unprotect a repo branch.
 - ``status <assignment>`` Shows the status of student homework repositories, as well as the last commit author and timestamp for each repository.
-- ``roster`` Manages the course roster.
-- ``canvas`` Lists Canvas courses or imports students from a Canvas course to the roster.
-- ``import <file> <section>`` Imports students from a CSV file to the roster.
-- ``set <key> <value>`` Sets ``<key>`` to ``<value>`` in the config.
 
-SSH
+SSH key authentication
 ~~~
 
 Your GitLab account must have an SSH key set up in order to push the assignment to the students' repos.

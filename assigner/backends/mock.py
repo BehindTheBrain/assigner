@@ -201,10 +201,10 @@ class MockRepo(RepoBase):
     def delete_member(self, user_id):
         return MagicMock()
 
-    def list_commits(self, ref_name="master", since=""):
+    def list_commits(self, ref_name, since=""):
         return MagicMock()
 
-    def list_commit_hashes(self, ref_name: str = "master", since="") -> List[str]:
+    def list_commit_hashes(self, ref_name: str, since="") -> List[str]:
         return MagicMock()
 
     def list_commit_files(self, commit_hash: str) -> List[str]:
@@ -222,7 +222,7 @@ class MockRepo(RepoBase):
     def list_pushes(self):
         return MagicMock()
 
-    def get_last_HEAD_commit(self, ref="master"):
+    def get_last_HEAD_commit(self, ref):
         return MagicMock()
 
     def list_branches(self):
@@ -244,10 +244,10 @@ class MockRepo(RepoBase):
         self.edit_member(student_id, Access.reporter)
 
     # NOTE: these are not the same defaults that Mock uses
-    def protect(self, branch="master", developer_push=True, developer_merge=True):
+    def protect(self, branch, developer_push=True, developer_merge=True):
         return MagicMock()
 
-    def unprotect(self, branch="master"):
+    def unprotect(self, branch):
         return MagicMock()
 
 
@@ -256,7 +256,7 @@ class MockTemplateRepo(MockRepo, TemplateRepoBase):
     def new(cls, name, namespace, config):
         return MockRepo(name, namespace, config)
 
-    def push_to(self, student_repo, branch="master"):
+    def push_to(self, student_repo, branch):
         logging.debug("Pushed %s to %s.", self.name, student_repo.name)
 
 
@@ -280,7 +280,7 @@ class MockStudentRepo(MockRepo, StudentRepoBase):
 
         return "{semester}-{section}-{assignment}-{user}".format(**fmt)
 
-    def push(self, base_repo, branch="master"):
+    def push(self, base_repo, branch):
         """Push base_repo code to this repo"""
         base_repo.push_to(self, branch)
 

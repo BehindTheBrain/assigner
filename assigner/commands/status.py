@@ -91,7 +91,7 @@ def status(conf, backend, args):
         if branches:
             row[5] = "\n".join([b["name"] for b in branches])
 
-        head = repo.get_last_HEAD_commit()
+        head = repo.get_last_HEAD_commit(args.branch)
 
         if head:
             row[6] = head["short_id"]
@@ -108,6 +108,8 @@ def status(conf, backend, args):
 
 def setup_parser(parser):
     parser.add_argument("--section", nargs="?", help="Section to get status of")
+    parser.add_argument("--branch", "--branches", nargs="+", required=True,
+                        help="Branch or branches to push")
     parser.add_argument("--student", metavar="id", help="ID of student.")
     parser.add_argument(
         "--sort",

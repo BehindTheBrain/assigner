@@ -17,8 +17,8 @@ def protect(args):
 def setup_parser(parser):
     parser.add_argument("name",
                         help="Name of the assignment to protect.")
-    parser.add_argument("--branch", "--branches", nargs="+", default=["master"],
-                        help="Branch to protect (default: master).")
+    parser.add_argument("--branch", "--branches", nargs="+", required=True,
+                        help="Branch to protect.")
     parser.add_argument("--section", nargs="?",
                         help="Section to protect")
     parser.add_argument("--student", metavar="id",

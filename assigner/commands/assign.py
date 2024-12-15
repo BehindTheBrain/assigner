@@ -22,10 +22,7 @@ def assign(conf, backend, args):
     in the roster.
     """
     hw_name = args.name
-    if args.branch:
-        branch = args.branch
-    else:
-        branch = ["master"]
+    branch = args.branch
     dry_run = args.dry_run
     force = args.force
     namespace = conf.namespace
@@ -140,7 +137,7 @@ def assign(conf, backend, args):
 def setup_parser(parser):
     parser.add_argument("name",
                         help="Name of the assignment to assign.")
-    parser.add_argument("--branch", "--branches", nargs="+",
+    parser.add_argument("--branch", "--branches", nargs="+", required=True,
                         help="Branch or branches to push")
     parser.add_argument("--section", nargs="?",
                         help="Section to assign homework to")

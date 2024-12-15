@@ -378,13 +378,13 @@ class GitlabRepo(RepoBase):
         access = [Access(m["access_level"]) for m in self.list_members()]
         return all([a in (Access.guest, Access.reporter) for a in access])
 
-    def list_commits(self, ref_name="master", since=""):
+    def list_commits(self, ref_name, since=""):
         params = {"id": self.id, "ref_name": ref_name}
         if since:
             params["since"] = since
         return self._gl_get("/projects/{}/repository/commits".format(self.id), params)
 
-    def list_commit_hashes(self, ref_name: str = "master", since="") -> List[str]:
+    def list_commit_hashes(self, ref_name: str, since="") -> List[str]:
         return [commit["id"] for commit in self.list_commits(ref_name, since)]
 
     def list_commit_files(self, commit_hash) -> List[str]:
@@ -427,7 +427,7 @@ class GitlabRepo(RepoBase):
     def list_pushes(self):
         return self._gl_get("/projects/{}/events?action=pushed".format(self.id))
 
-    def get_last_HEAD_commit(self, ref="master"):
+    def get_last_HEAD_commit(self, ref):
         matching_pushes = list(
             filter(lambda push: push["push_data"]["ref"] == ref, self.list_pushes())
         )
@@ -472,7 +472,7 @@ class GitlabRepo(RepoBase):
         return self._gl_post("/projects/{}/unarchive".format(self.id))
 
     # NOTE: these are not the same defaults that Gitlab uses
-    def protect(self, branch="master", developer_push=True, developer_merge=True):
+    def protect(self, branch, developer_push=True, developer_merge=True):
         params = {
             "developers_can_push": developer_push,
             "developers_can_merge": developer_merge,
@@ -482,7 +482,7 @@ class GitlabRepo(RepoBase):
             params,
         )
 
-    def unprotect(self, branch="master"):
+    def unprotect(self, branch):
         return self._gl_put(
             "/projects/{}/repository/branches/{}/unprotect".format(self.id, branch)
         )
@@ -552,7 +552,7 @@ class GitlabTemplateRepo(GitlabRepo, TemplateRepoBase):
 
         return cls.from_url(result["http_url_to_repo"], config["token"])
 
-    def push_to(self, student_repo, branch="master"):
+    def push_to(self, student_repo, branch):
         r = git.Remote.add(self.repo, student_repo.name, student_repo.ssh_url)
         r.push(branch)
         logging.debug("Pushed %s to %s.", self.name, student_repo.name)
@@ -595,7 +595,7 @@ class GitlabStudentRepo(GitlabRepo, StudentRepoBase):
 
         return "{semester}-{section}-{assignment}-{user}".format(**fmt)
 
-    def push(self, base_repo, branch="master"):
+    def push(self, base_repo, branch):
         """Push base_repo code to this repo"""
         base_repo.push_to(self, branch)
 

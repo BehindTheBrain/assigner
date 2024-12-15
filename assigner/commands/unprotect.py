@@ -17,7 +17,7 @@ def unprotect(args):
 def setup_parser(parser):
     parser.add_argument("name",
                         help="Name of the assignment to unprotect.")
-    parser.add_argument("--branch", "--branches", nargs="+", default=["master"],
+    parser.add_argument("--branch", "--branches", nargs="+", required=True,
                         help="Branch to unprotect.")
     parser.add_argument("--section", nargs="?",
                         help="Section to unprotect")
