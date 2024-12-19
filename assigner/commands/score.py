@@ -386,7 +386,7 @@ def setup_parser(parser: argparse.ArgumentParser):
 
     all_parser = subparsers.add_parser(
         "all",
-        help="Get scores (using CI artifacts) for all students for a given assignment",
+        help="Get scores (using CI artifacts) for all students for a given assignment.",
     )
 
     all_parser.add_argument("--branch", "--branches", nargs="+", required=True,
@@ -400,13 +400,13 @@ def setup_parser(parser: argparse.ArgumentParser):
 
     interactive_parser = subparsers.add_parser(
         "interactive",
-        help="Interactively checkout individual students and upload their grades to Canvas",
+        help="Interactively checkout individual students and upload their grades to Canvas.",
     )
     interactive_parser.set_defaults(run=checkout_students)
 
     integrity_parser = subparsers.add_parser(
         "integrity",
-        help="Check the integrity of desired files for a set of assignment respositories",
+        help="Check the integrity of desired files for a set of assignment respositories.",
     )
     integrity_parser.add_argument("--student", nargs=1, help="ID of student to score")
     integrity_parser.set_defaults(run=integrity_check)
@@ -420,8 +420,11 @@ def setup_parser(parser: argparse.ArgumentParser):
             "--files",
             nargs="+",
             dest="files",
-            default=[".admin_files/grader_hashes.txt", ".admin_files/hash_gen.sh"],
-            help="Files to check for modification",
+            default=[".gitlab-ci.yml",
+                     ".admin_files/grader_hashes.txt",
+                     ".admin_files/hash_gen.sh",
+                     ".admin_files/check_hashes.sh"],
+            help="Files to security-check for tampering.",
         )
 
     # Flags common to the scoring subcommands
@@ -434,7 +437,7 @@ def setup_parser(parser: argparse.ArgumentParser):
         subcmd_parser.add_argument(
             "--path",
             default="results.txt",
-            help="Path within repo to grader results file",
+            help="Path within repo to grader results file.",
         )
 
-    make_help_parser(parser, subparsers, "Show help for score or one of its commands")
+    make_help_parser(parser, subparsers, "Show help for score or one of its commands.")

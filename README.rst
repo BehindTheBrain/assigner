@@ -58,7 +58,7 @@ The following commands require the `--brach <branch_name>` flag:
 - ``status <assignment>`` Shows the status of student homework repositories, as well as the last commit author and timestamp for each repository.
 
 SSH key authentication
-~~~
+~~~~~~~~~~~~~~~~~~~~~~
 
 Your GitLab account must have an SSH key set up in order to push the assignment to the students' repos.
 
