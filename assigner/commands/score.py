@@ -436,7 +436,7 @@ def setup_parser(parser: argparse.ArgumentParser):
         )
         subcmd_parser.add_argument(
             "--path",
-            default="results.txt",
+            default="grade",
             help="Path within repo to grader results file.",
         )
 
