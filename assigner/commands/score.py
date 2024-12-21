@@ -276,8 +276,8 @@ def handle_scoring(
         if "id" not in student:
             student["id"] = backend.repo.get_user_id(username, backend_conf)
         if not args.noverify:
-            unlock_time = repo.get_member_add_date(student["id"])
-            check_repo_integrity(repo, args.branch, files_to_check, unlock_time)
+            open_time = repo.get_member_add_date(student["id"])
+            check_repo_integrity(repo, args.branch, files_to_check, open_time)
         score = get_most_recent_score(repo, args.path)
         if upload:
             canvas = OptionalCanvas.get_api(conf)
@@ -373,7 +373,8 @@ def integrity_check(
 
         try:
             repo = backend.student_repo(conf.backend, conf.namespace, full_name)
-            check_repo_integrity(repo, files_to_check)
+            open_time = repo.get_member_add_date(student["id"])
+            check_repo_integrity(repo, args.branch, files_to_check, open_time)
         except RepoError as e:
             logger.debug(e)
             logger.warning(
@@ -388,14 +389,10 @@ def setup_parser(parser: argparse.ArgumentParser):
         "all",
         help="Get scores (using CI artifacts) for all students for a given assignment.",
     )
-
-    all_parser.add_argument("--branch", "--branches", nargs="+", required=True,
-                        help="Branch or branches to push")
     all_parser.add_argument("--student", nargs=1, help="ID of student to score")
     all_parser.add_argument(
-        "--upload", action="store_true", help="Upload grades to Canvas"
+        "--upload", action="store_true", default=False, help="Upload grades to Canvas"
     )
-
     all_parser.set_defaults(run=score_assignments)
 
     interactive_parser = subparsers.add_parser(
@@ -414,6 +411,8 @@ def setup_parser(parser: argparse.ArgumentParser):
     # Flags common to all subcommands
     for subcmd_parser in [all_parser, interactive_parser, integrity_parser]:
         subcmd_parser.add_argument("name", help="Name of the assignment to check")
+        subcmd_parser.add_argument("--branch", "--branches", nargs="+", required=True,
+                                   help="Branch or branches to push")
         subcmd_parser.add_argument("--section", nargs=1, help="Section to check")
         subcmd_parser.add_argument(
             "-f",
