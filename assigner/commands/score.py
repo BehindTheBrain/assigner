@@ -55,7 +55,10 @@ class OptionalCanvas:
             raise CourseNotFound
         courses = conf["canvas-courses"]
         section_ids = {course["section"]: course["id"] for course in courses}
-        min_name = re.search(r"[A-Za-z]+\d+", hw_name).group(0)
+        # TODO check this deletion: This was too shallow, collides on start of names.
+        # min_name = re.search(r"[A-Za-z]+\d+", hw_name).group(0)
+        min_name = hw_name
+        print(min_name)
         assignment_ids = {}
         for section, course_id in section_ids.items():
             try:
@@ -65,10 +68,14 @@ class OptionalCanvas:
                 raise
             if len(canvas_assignments) != 1:
                 logger.warning(
-                    "Could not uniquely identify Canvas assignment from name %s and section %s, using first assignment listed",
+                    "Could not uniquely identify Canvas assignment from name %s and section %s.",
                     min_name,
                     section,
                 )
+                # TODO: removed shallow greedy match, so this is a lot less likely
+                # Could stil happen if one assignment name was the full start to another...
+                # TODO want to over-write random one though.
+                exit(1)
             assignment_ids[section] = canvas_assignments[0]["id"]
         return (section_ids, assignment_ids)
 
