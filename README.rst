@@ -65,7 +65,7 @@ Your GitLab account must have an SSH key set up in order to push the assignment 
 Configuration File
 ~~~~~~~~~~~~~~~~~~
 
-*Assigner* will create a ``_config.yml`` file in the current directory that will persist your GitLab private token and other settings.
+*Assigner* will create a ``.config.yml`` file in the current directory that will persist your GitLab private token and other settings.
 You can use a different config file by specifying the ``--config`` option.
 
 *Assigner* needs you to set a few config keys before it will work.

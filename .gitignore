@@ -62,6 +62,6 @@ bin/
 include/
 pip*
 *~
-_config.yml
+.config.yml
 secret.py
 .*.sw?

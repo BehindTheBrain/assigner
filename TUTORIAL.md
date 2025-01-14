@@ -20,10 +20,10 @@ The first thing you should do when setting Assigner up for a course is to create
 ### Configuring Assigner (`assigner init`)
 
 Assigner needs to know various bits of information about GitLab and your course to do its job.
-It stores this information in a file named `_config.yml` in your current directory.
+It stores this information in a file named `.config.yml` in your current directory.
 For an example of what this file ought to contain, see `_config.example.yml` in the Assigner git repository.
 
-**Note:** Your `_config.yml` will contain at least one access token; therefore, you should be careful that others are not able to read your `_config.yml`.
+**Note:** Your `.config.yml` will contain at least one access token; therefore, you should be careful that others are not able to read your `.config.yml`.
 Treat it as you would a file containing a password or your Social Security Number.
 
 Rather than making a config file by hand, Assigner has a command that will interactively prompt you for the required information.
@@ -123,7 +123,7 @@ This section will walk you through making a new assignment named 'hw1' and perfo
 ### Creating a new template repository
 
 To create the template repository for the new assignment, run `assigner new hw1`.
-Assigner will create a new repository named 'hw1' in the GitLab group specified in `_config.yml`.
+Assigner will create a new repository named 'hw1' in the GitLab group specified in `.config.yml`.
 It then will print out both an HTTPS and an SSH URL that you can use to view this repo in the GitLab UI or to clone a local copy.
 
 Now you should add any materials your students need to complete the assignment to this repo.

@@ -46,7 +46,7 @@ From here on, before running unit tests or the like, run `source env/bin/activat
 
 1. Make as few assumptions about how Assigner will be used as possible. This should be a tool that people can use for a variety of class styles.
 1. Users should not be afraid of using Assigner. Commands should be idempotent and not run the risk of losing students' work to the fullest extent possible.
-1. Hold as little metadata as possible. Currently we record nothing about assignments in `_config.yml`;
+1. Hold as little metadata as possible. Currently we record nothing about assignments in `.config.yml`;
     someone could theoretically create a bunch of repos by hand and use `assigner` to manage them, provided they were named properly.
 
 # Distribution

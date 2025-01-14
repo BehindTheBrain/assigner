@@ -139,7 +139,7 @@ def make_parser():
     """
 
     parser = argparse.ArgumentParser(description=description)
-    parser.add_argument("--config", default="_config.yml",
+    parser.add_argument("--config", default=".config.yml",
                         help="Path a config file")
     parser.add_argument("--tracebacks", action="store_true",
                         help="Show full tracebacks")
